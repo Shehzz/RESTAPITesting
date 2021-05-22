@@ -23,7 +23,7 @@ def test_creating_a_new_user_using_POST_123(URL, auth_token):
     pytest.global_response_id = response_id  # making the response_id a GLOBAL variable
     print("\nThe userID generated is:" + str(response_id))
     assert response_json['code'] == 201
-    assert data_verification(URL)  # making sure all the data is valid
+    assert data_verification(URL)  # making sure all the data is verified
 
 
 def data_verification(URL):
