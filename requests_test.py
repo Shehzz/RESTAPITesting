@@ -29,10 +29,10 @@ def test_creating_a_new_user_using_POST_123(URL, auth_token):
 def data_verification(URL):
     response = requests.get(URL + str(pytest.global_response_id)).json()
     if response['data']['id'] == pytest.global_response_id and \
-       response['data']['name'] == variables.fake_name and \
-       response['data']['email'] == variables.fake_email and \
-       response['data']['gender'] == "Male" and \
-       response['data']['status'] == "Active":
+            response['data']['name'] == variables.fake_name and \
+            response['data']['email'] == variables.fake_email and \
+            response['data']['gender'] == "Male" and \
+            response['data']['status'] == "Active":
         print("\nData Verification success!")
         print(response)
         return True
@@ -41,7 +41,7 @@ def data_verification(URL):
         return False
 
 
-def test_fetching_existing_user_using_GET_123(URL):
+def test_fetching_existing_user_using_GET(URL):
     response = requests.get(URL + str(pytest.global_response_id)).json()
     assert response['code'] == 200
     print("\nThe HTTP response code is " + str(response['code']))
@@ -62,3 +62,17 @@ def test_updating_existing_user_using_PUT(URL, auth_token):
         print("The user details have not been updated!")
         assert False
 
+
+def test_deleting_existing_user_using_DELETE_123(URL, auth_token):
+    response = requests.delete(URL + str(pytest.global_response_id), headers=auth_token).json()
+    assert response['code'] == 204 and \
+           response['data'] is None
+
+    """Once the DELETE request is executed, we can verify this by doing a GET request and \
+    checking the 404 response code"""
+
+    get_response = requests.get(URL + str(pytest.global_response_id)).json()
+    assert get_response['code'] == 404 and \
+           get_response['data']['message'] == "Resource not found"
+    print("\nThe HTTP response code received is " + str(get_response['code']) + "!" +
+          "\nThe user has been deleted successfully!")
