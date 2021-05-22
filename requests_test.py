@@ -30,7 +30,7 @@ def test_creating_a_new_user_using_POST_123(URL, auth_token):
     pytest.global_response_id = response_id  # making the response_id a GLOBAL variable
     print("\nThe userID generated is:" + str(response_id))
     assert response_json['code'] == 201, "The HTTP response code is not 201"
-    assert data_verification()
+    assert data_verification(URL)
 
 
 @pytest.mark.parametrize(
@@ -51,14 +51,15 @@ def test_data_verification_method(URL, name, email, gender, status):
     return True
 
 
-def data_verification():
-    response = requests.get("https://gorest.co.in/public-api/users/" + str(pytest.global_response_id)).json()
+def data_verification(URL):
+    response = requests.get(URL + str(pytest.global_response_id)).json()
     if response['data']['id'] == pytest.global_response_id and \
        response['data']['name'] == variables.fake_name and \
        response['data']['email'] == variables.fake_email and \
        response['data']['gender'] == "Male" and \
        response['data']['status'] == "Active":
         print("\nData Validation success!")
+        print(response)
         return True
     else:
         print("\nData Validation failed!")
