@@ -6,6 +6,7 @@
 * Python3
 * Pytest
 * Request libraries
+* Faker
 
 ---
 
