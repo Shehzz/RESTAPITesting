@@ -11,7 +11,7 @@
 
 To run these files, please do the following commands:
 
-1. `pip install pytest` & `pip install requests`
+1. `pip3 install pytest`, `pip3 install requests` & `pip3 install faker`
 2. To run the positive scenarios, please run: `pytest -m positive -v -s --disable-pytest-warnings`
 3. To run the negative scenarios, please run: `pytest -m negative -v -s --disable-pytest-warnings`
 
