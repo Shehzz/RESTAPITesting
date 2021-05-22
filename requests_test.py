@@ -8,11 +8,12 @@ def test_checking_for_200_status(URL):
     assert response['code'] == 200
 
 
-def test_checking_for_deleted_user(URL):
-    get_response_body = requests.get(URL + variables.deleted_user).json()
+def test_checking_for_nonexistent_user(URL):
+    get_response_body = requests.get(URL + variables.nonexistent_user).json()
     assert get_response_body['code'] == 404 and \
            get_response_body['data']['message'] == "Resource not found"
-    print("\nThe user with the ID:" + variables.deleted_user + " doesn't exist & the HTTP response code received is:" + str(get_response_body['code']))
+    print("\nThe user with the ID:" + variables.nonexistent_user + \
+          " doesn't exist & the HTTP response code received is:" + str(get_response_body['code']))
 
 
 def test_creating_a_new_user_using_POST_123(URL, auth_token):
@@ -21,7 +22,7 @@ def test_creating_a_new_user_using_POST_123(URL, auth_token):
     response_id = response_json['data']['id']
     pytest.global_response_id = response_id  # making the response_id a GLOBAL variable
     print("\nThe userID generated is:" + str(response_id))
-    assert response_json['code'] == 201, "The HTTP response code is not 201"
+    assert response_json['code'] == 201
     assert data_verification(URL)  # making sure all the data is valid
 
 
@@ -32,18 +33,24 @@ def data_verification(URL):
        response['data']['email'] == variables.fake_email and \
        response['data']['gender'] == "Male" and \
        response['data']['status'] == "Active":
-        print("\nData Validation success!")
+        print("\nData Verification success!")
         print(response)
         return True
     else:
-        print("\nData Validation failed!")
+        print("\nData Verification failed!")
         return False
 
 
-def test_updating_existing_user_using_PUT_123(URL, auth_token):
+def test_fetching_existing_user_using_GET_123(URL):
+    response = requests.get(URL + str(pytest.global_response_id)).json()
+    assert response['code'] == 200
+    print("\nThe HTTP response code is " + str(response['code']))
+
+
+def test_updating_existing_user_using_PUT(URL, auth_token):
     response = requests.put(URL + str(pytest.global_response_id), headers=auth_token, data=variables.updated_payload)
     response_json = response.json()
-    assert response_json['code'] == 200, "The HTTP response code is not 200"
+    assert response_json['code'] == 200
 
     """ If the data_verification() fails here, that means the user ID has been updated successfully"""
 
