@@ -62,7 +62,7 @@ def test_deleting_existing_user_using_DELETE(URL, auth_token):
 
 
 @pytest.mark.negative
-def test_faulty_payload_using_PUT(URL, auth_token):
+def test_faulty_payload_using_POST(URL, auth_token):
     response = requests.post(URL, headers=auth_token, data=variables.faulty_payload).json()
     assert response['code'] == 422 and \
            response['data'][0]['field'] == "email"
